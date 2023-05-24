@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% load static %}
+<link href="{% static 'css/img.css' %}" rel="stylesheet">
+
+{% if user.is_authenticated %}
+
+    {% if user.first_name %}
+        <h2 align="center">Добро пожаловать, {{ user.first_name }}!</h2>
+    {% else %}
+        <h2 align="center">Добро пожаловать, {{ user }}!</h2>
+    {% endif %}
+
+    {% if carouselfile_list %}
+    <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            {% for file in carouselfile_list %}
+                    <div class="carousel-item {% if forloop.counter0 == 0 %} active {% endif %}">
+                        <img src="{% static file.photo %}" class="d-block w-100" alt="{{ file.title }}">
+                    </div>
+            {% endfor %}
+        </div>
+
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+
+    </div>
+    {% endif %}
+<hr>
+{% endif %}
+
+{% endblock content %}

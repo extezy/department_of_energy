@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<form action="" method="post">
+    {% csrf_token %}
+    <div class="row">
+        <div class="col">
+            <label for="id_name">Название организации:</label>
+            <input class="form-control" type="text" name="name" value="{{ supplier.name }}" required id="id_name">
+        </div>
+        <div class="col">
+            <label for="id_phone_number">Телефон:</label>
+            <input class="form-control" type="tel" name="phone_number" value="{{ supplier.phone_number }}"
+                   id="id_phone_number">
+
+            <label for="id_second_phone_number">Второй телефон:</label>
+            <input class="form-control" type="tel" name="second_phone_number" value="{{ supplier.second_phone_number }}"
+                    id="id_second_phone_number">
+
+            <label for="id_email">Электронная почта:</label>
+            <input class="form-control" type="email" name="email" value="{{ supplier.email }}"  id="id_email">
+
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <input class="btn btn-outline-success" type="submit" value="Принять"/>
+        </div>
+    </div>
+
+</form>
+
+{% endblock content %}

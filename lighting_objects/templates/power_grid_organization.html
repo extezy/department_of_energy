@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% load static %}
+
+<link href="{% static 'css/table.css' %}" rel="stylesheet" type="text/css">
+<link href="{% static 'css/tree-view.css' %}" rel="stylesheet" type="text/css">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.css" rel="stylesheet" type="text/css"/>
+
+    {% if user.is_authenticated %}
+    {% if powergridorganization_list %}
+    <h3>Сетевые организации</h3>
+
+    <ol class="list-group list-group-numbered tree-nav">
+        {% for organization in powergridorganization_list %}
+        <li class="list-group-item d-flex justify-content-between align-items-start list-group-item-success ">
+            <details class="tree-nav__item is-expandable ms-2 me-auto">
+                <summary class="tree-nav__item-title">{{ organization.name }}
+                    {% if organization.owners.all %}
+                        <span class="badge bg-primary rounded-pill">{{ organization.owners.all.count }}</span>
+                    {% endif %}
+                </summary>
+                <div class="ms-2 me-auto">
+                    <ol class="list-group list-group-numbered nested">
+                        {% for owner in organization.owners.all %}
+                        <li class="list-group-item d-flex justify-content-between align-items-start list-group-item-warning">
+                            {% if owner.employees.all %}
+                            <details class="tree-nav__item is-expandable ms-2 me-auto">
+                                <summary class="tree-nav__item-title">{{ owner.name }}
+                                    <span class="badge bg-primary rounded-pill">{{ owner.employees.all.count }}</span>
+                                </summary>
+                                <div class="ms-2 me-auto">
+                                    <ol class="list-group list-group-numbered">
+                                    {% if owner.employees.all %}
+                                    <table class="list-group-item table table-striped table-hover table-bordered" cellspacing="0" width="100%">
+                                    <thead>
+                                    <tr class="fw-bold">
+                                        <th>Должность</th>
+                                        <th>ФИО</th>
+                                        <th>Телефон</th>
+                                        <th>Email</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for employee in owner.employees.all %}
+                                    <tr>
+                                        <td>{{ employee.position }}</td>
+                                        <td>{{ employee.name }}</td>
+                                        <td>{{ employee.phone_number }}</td>
+                                        <td>{{ employee.email }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                    </table>
+                                    {% endif %}
+                                </ol>
+                                </div>
+                            </details>
+                            {% else %}
+                            <details class="tree-nav__item ms-2 me-auto">
+                                <summary class="tree-nav__item-title">{{ owner.name }}</summary>
+                            </details>
+                            {% endif %}
+                        </li>
+                        {% endfor %}
+                    </ol>
+                </div>
+            </details>
+        </li>
+
+        {% endfor %}
+    </ol>
+    {% else %}
+    <p>Нет данных</p>
+    {% endif %}
+    {% endif %}
+
+{% endblock content %}

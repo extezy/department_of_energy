@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<link href="{% static 'css/update_forms.css' %}" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
+<form class="form-inline" action="" method="post">
+    {% csrf_token %}
+    <div class="input-group mb-2">
+        {{ form.type.label_tag }}*  <a target="popup" onclick="window.open('{% url 'lighting_object_type_create' %}','name','width=600,height=400')"><img src="{% static 'img/add.png' %}" alt="Новый"></a>
+        {{ form.type }}
+    </div>
+
+    <div class="input-group mb-2">
+        {{ form.name.label_tag }}*
+        {{ form.name }}
+    </div>
+
+    <div class="input-group mb-2">
+        {{ form.government.label_tag }}
+        {{ form.government }}
+    </div>
+
+    <div class="input-group mb-2">
+        {{ form.supplier.label_tag }}*
+        {{ form.supplier }}
+    </div>
+
+    <div class="input-group mb-2">
+        {{ form.documents.label_tag }}
+        {{ form.documents }}
+    </div>
+
+    <div class="input-group mb-2">
+        {{ form.contract_number.label_tag }}
+        {{ form.contract_number }}
+    </div>
+
+    <div class="input-group mb-2">
+        {{ form.power.label_tag }}*
+        {{ form.power }}
+    </div>
+
+    <div class="input-group mb-2">
+        {{ form.note.label_tag }}
+        {{ form.note }}
+    </div>
+
+    <div class="input-group mb-2">
+        <div class="col">
+            <input class="btn btn-outline-success" type="submit" value="Принять"/>
+            {% if lightingobject.id %}
+            <a href="{% url 'object_detail' lightingobject.id %}" class="btn btn-outline-danger">Отмена</a>
+            {% else %}
+            <a href="/" class="btn btn-outline-danger">На главную</a>
+            {% endif %}
+        </div>
+    </div>
+
+</form>
+
+<script src="{% static 'js/cdn/select2.min.js' %}"></script>
+<script src="{% static 'js/select2.js' %}"></script>
+
+{% endblock %}
+
+

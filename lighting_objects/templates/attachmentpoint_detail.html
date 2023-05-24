@@ -1,0 +1,46 @@
+{% extends 'base_detail.html' %}
+
+{% block content %}
+
+<title>Детальная информация по точке присоединения</title>
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-6">Точка присоединения:</div>
+        <div class="col-sm-6">{{ attachmentpoint.name }}</div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-sm-6">Владелец точки присоединения: </div>
+        <div class="col-sm-6">
+                    {% if attachmentpoint.owner %}
+                        {{ attachmentpoint.owner }}
+                    {% endif %}
+        </div>
+    </div>
+    <hr>
+    {% if attachmentpoint.meters.all %}
+    <div class="row">
+            <div class="col-sm-6">Счётчики: </div>
+            {% for meter in attachmentpoint.meters.all %}
+                <div class="col-sm">
+                        {{ meter.number }}
+                </div>
+            {% endfor %}
+    </div>
+    <hr>
+    {% endif %}
+
+    <div class="row">
+            <div class="col-sm-6">Координаты:</div>
+            <div class="col-sm-6">
+                {% if attachmentpoint.coordinates %}
+                    <a href="https://yandex.ru/maps/?pt={{electricitymeter.coordinates}}&z=18&l=map" target="_blank">
+                        {{ attachmentpoint.coordinates }}
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}

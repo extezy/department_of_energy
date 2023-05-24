@@ -1,0 +1,72 @@
+{% extends 'base_detail.html' %}
+
+{% block content %}
+
+<title>Детальная информация по счётчику № {{ electricitymeter.number }} </title>
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-6">Номер счётчика:</div>
+        <div class="col-sm-6">{{ electricitymeter.number }}</div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-sm-6">Тип:</div>
+        <div class="col-sm-6">{{ electricitymeter.type }}</div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-sm-6">Модель:</div>
+        <div class="col-sm-6">{{ electricitymeter.model }}</div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-sm-6">Дата поверки:</div>
+        {% if electricitymeter.check_date %}
+            <div class="col-sm-6">{{ electricitymeter.check_date }}</div>
+        {% endif %}
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-sm-6">Срок до следующей поверки:</div>
+        {% if electricitymeter.life_time %}
+            <div class="col-sm-6">{{ electricitymeter.life_time }}</div>
+        {% endif %}
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-sm-6">Коэффициенты трансформации:</div>
+        {% if electricitymeter.transformation_ratios %}
+            <div class="col-sm-6">{{ electricitymeter.transformation_ratios }}</div>
+        {% endif %}
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-sm-6">Координаты:</div>
+        <div class="col-sm-6">
+            {% if electricitymeter.coordinates %}
+                <a href="https://yandex.ru/maps/?pt={{electricitymeter.coordinates}}&z=18&l=map" target="_blank">
+                    {{ electricitymeter.coordinates }}
+                </a>
+            {% endif %}
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-sm-6">Пломбы:</div>
+        {% if electricitymeter.seals %}
+            <div class="col-sm-6">{{ electricitymeter.seals }}</div>
+        {% endif %}
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-sm-6">Место установки:</div>
+        {% if electricitymeter.installation_location %}
+            <div class="col-sm-6">{{ electricitymeter.installation_location }}</div>
+        {% endif %}
+    </div>
+    <hr>
+
+</div>
+
+{% endblock content %}

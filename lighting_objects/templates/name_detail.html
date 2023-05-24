@@ -1,0 +1,22 @@
+{% extends 'base_detail.html' %}
+
+{% block content %}
+
+<title>Детальная информация по названию объекта</title>
+
+<div class="container">
+
+    <div class="row">
+      <div class="col-sm-6">Название на балансе:</div>
+      <div class="col-sm-6">{{ lightingobjectname.name }}</div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-sm-6">Инвентарный номер:</div>
+      <div class="col-sm-6">{{ lightingobjectname.inventory_number }}</div>
+    </div>
+
+
+</div>
+
+{% endblock content %}

@@ -1,0 +1,12 @@
+{% extends 'base.html' %} &nbsp;
+{% block content %}
+    <h2>Вход</h2>
+   {% if form.errors %}
+    <p>{{ form.errors.error }}</p>
+  {% endif %}
+    <form action="{% url 'login' %}" method="post">
+        {{ form }}
+        {% csrf_token %}
+        <button type="submit" class="btn btn-success">Войти</button>
+    </form>
+{% endblock content %}

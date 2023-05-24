@@ -1,0 +1,177 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<title>Детальная информация по {{ lightingobject.name }} </title>
+<h5>Детальная информация по объекту
+</h5>
+
+<form>
+    <div class="row">
+        <div class="col-sm">
+            <label>Тип объекта:</label>
+            {% for type in lightingobject.types.all %}
+            <input class="form-control" type="text" readonly="True" value="{{ type.name }}">
+            {% endfor %}
+        </div>
+    </div>
+    <div class="row">
+
+        <div class="col-sm-6">
+            <label>Название по контракту:</label>
+            <textarea class="form-control" readonly="True"> {{ lightingobject.contract_info.name }}</textarea>
+        </div>
+
+        <div class="col-sm-6">
+            <div class="col-sm" >
+                <label>Номер контракта:</label>
+                <input class="form-control" type="text" readonly="True" value="{{ lightingobject.contract_info.number }}">
+            </div>
+
+            <div class="col-sm">
+                <label>Номер абонента в контракте:</label>
+                <input class="form-control" type="text" readonly="True" value="{{ lightingobject.contract_info.object_number }}">
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-sm-6">
+
+            <div class="col-sm">
+            <label>Поставщик электроэнергии:</label>
+            <input class="form-control" type="text" readonly="True" value="{{ lightingobject.supplier.name }}">
+            </div>
+
+            <div class="col-sm">
+                <label>Мощность</label>
+                <input class="form-control" type="text" readonly="True" value="{{ lightingobject.power }}">
+            </div>
+
+        </div>
+
+        <div class="col-sm-6">
+
+            <div class="col-sm">
+                <label>Телефон:</label>
+                <input class="form-control" type="text" readonly="True" value="{{ lightingobject.supplier.phone_number }}">
+            </div>
+
+            <div class="col-sm">
+                <label>Email:</label>
+                <input class="form-control" type="text" readonly="True" value="{{ lightingobject.supplier.email }}">
+            </div>
+
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="row">
+        <div class="col-sm-6">
+            <label>ОМС:</label>
+            <input class="form-control" type="text" readonly="True"  value="{{ lightingobject.government.name }}">
+        </div>
+        <div class="col-sm-6">
+            <div class="col-sm">
+            <label>РДО:</label>
+            <input class="form-control" type="text" readonly="True" value="{{ lightingobject.government.department.name }}">
+            </div>
+            <div class="col-sm">
+            <label>РУАД:</label>
+            <input class="form-control" type="text" readonly="True" value="{{ lightingobject.government.department.area.name }}">
+            </div>
+        </div>
+    </div>
+    <hr>
+
+    {% if lightingobject.attachment_points %}
+    <hr>
+    <h5>Точки присоединения</h5>
+    {% endif %}
+    {% for attachment_point in lightingobject.attachment_points.all %}
+    <div class="row">
+        <div class="col-sm-6">
+            <label>Название:</label>
+            <textarea class="form-control" type="text" readonly="True">{{ attachment_point.name }}</textarea>
+        </div>
+        <div class="col-sm-6">
+            <label>Владелец:</label>
+            <textarea class="form-control" type="text" readonly="True">{{ attachment_point.owner }}</textarea>
+        </div>
+    </div>
+    {% endfor %}
+    {% if lightingobject.substations.all %}
+    <hr>
+    <h5>ТП</h5>
+    {% endif %}
+    {% for substation in lightingobject.substations.all %}
+    <div class="row">
+        <div class="col-sm">
+            <textarea class="form-control" type="text" readonly="True">{{ substation }}</textarea>
+        </div>
+    </div>
+    {% endfor %}
+    {% if lightingobject.documents %}
+    <hr>
+    <h5>Документы</h5>
+    <div class="row">
+
+        {% if lightingobject.documents.connection_act %}
+        <div class="col-sm-3">
+            <p><a href="/Files/{{ lightingobject.documents.connection_act }}" target="_blank">Тех. прис.</a></p>
+        </div>
+        {% endif %}
+
+        {% if lightingobject.documents.support_scheme %}
+        <div class="col-sm-3">
+            <p><a href="/Files/{{ lightingobject.documents.support_scheme }}" target="_blank">Поопорная схема</a></p>
+        </div>
+        {% endif %}
+
+        {% if lightingobject.documents.single_line_scheme %}
+        <div class="col-sm-3">
+            <p><a href="/Files/{{ lightingobject.documents.single_line_scheme }}" target="_blank">Однолинейная схема</a></p>
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+    {% if lightingobject.meters %}
+    <hr>
+    <h5>Счётчики</h5>
+    {% endif %}
+    {% for meter in lightingobject.meters.all %}
+        <div class="row">
+            <div class="col-sm-3">
+                <label>Тип:</label>
+                <input class="form-control" type="text" readonly="True" value="{{ meter.type }}">
+            </div>
+            <div class="col-sm-3">
+                <label>Номер:</label>
+                <input class="form-control" type="text" readonly="True" value="{{ meter.number }}">
+            </div>
+            <div class="col-sm-3">
+                <label>Модель:</label>
+                <input class="form-control" type="text" readonly="True" value="{{ meter.model }}">
+            </div>
+            <div class="col-sm-3">
+                <label>Дата следующей поверки:</label>
+                <input class="form-control" type="text" readonly="True" value='Посчитать надо'>
+            </div>
+        </div>
+    {% endfor %}
+
+    <hr>
+
+    {% if lightingobject.note is not None %}
+    <h5>Примечание:</h5>
+        <div class="row">
+            <div class="col-sm">
+                <textarea class="form-control" type="text" readonly="True">{{ lightingobject.note }}</textarea>
+            </div>
+        </div>
+    {% endif %}
+    <hr>
+</form>
+
+{% endblock content %}

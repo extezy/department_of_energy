@@ -1,0 +1,76 @@
+<!-- templates/base.html -->
+{% load static %}
+<html>
+<head>
+    <title>Управление Главного энергетика</title>
+
+    <link href="{% static 'css/base.css' %}" rel="stylesheet">
+    <link href="{% static 'css/cdn/select2.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/cdn/dataTables.bootstrap5.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/cdn/bootstrap.min.css' %}" rel="stylesheet">
+
+</head>
+<body class="container">
+
+<header>
+    <nav class="navbar navbar-expand-md bg-color fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{% url 'home' %}">Управление Главного Энергетика</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarToggle"
+                    aria-controls="navbarToggle" aria-expanded="false" aria-label="Переключатель навигации">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarToggle">
+                {% if user.is_authenticated %}
+
+                <div class="navbar-nav mr-auto">
+                    <a class="nav-item nav-link active" aria-current="page" href="{% url 'objects' %}">Объекты освещения</a>
+                    <a class="nav-item nav-link active" href="{% url 'electricitymeter' %}">СЭЭ</a>
+                    <a class="nav-item nav-link active" href="{% url 'powerengineers' %}">Энергетики</a>
+                    <a class="nav-item nav-link active" href="{% url 'area' %}">ОМС</a>
+                    <a class="nav-item nav-link active" href="{% url 'power_grid_organization' %}">Сетевые организации</a>
+                    {% if user.is_staff %}
+                    <a class="nav-item nav-link active" href="{% url 'admin:index' %}" target="_blank">Администрирование</a>
+                    {% endif %}
+
+                </div>
+
+                <div class="navbar-nav">
+                    <a class="nav-item nav-link" href="{% url 'logout' %}?next=/">{{ user.username }}, Выйти</a>
+                </div>
+                {% else %}
+                <div class="navbar-nav">
+                    <a class="nav-item nav-link active authenticate-message">Вы не авторизованы необходимо -></a>
+                    <a class="nav-item nav-link active" href="#" data-bs-toggle="modal"
+                       data-bs-target="#login_ajax">Войти</a>
+                </div>
+                {% endif %}
+
+            </div>
+        </div>
+    </nav>
+
+</header>
+<br>
+<br>
+<br>
+
+<script src="{% static 'js/cdn/jquery-3.5.1.js' %}"></script>
+{% block content %}
+{% endblock content %}
+
+{% include "registration/modal_login.html" %}
+{% include "details_modal.html" %}
+
+
+<script src="{% static 'js/cdn/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'js/cdn/dataTables.bootstrap5.min.js' %}"></script>
+<script src="{% static 'js/cdn/bootstrap.bundle.min.js' %}"></script>
+
+<script src="{% static 'js/main.js' %}"></script>
+<!--Страницы с сортировкой таблиц-->
+<script src="{% static 'js/table_sort.js' %}"></script>
+
+</body>
+</html>

@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% load static %}
+<link href="{% static 'css/table.css' %}" rel="stylesheet" type="text/css">
+
+    {% if user.is_authenticated %}
+    {% if powerengineer_list %}
+
+    <h1>Энергетики</h1>
+    <hr>
+    <table class="table table-striped table-hover table-bordered" cellspacing="0" width="100%">
+        <thead>
+        <tr>
+            <th>РУАД</th>
+            <th>ФИО</th>
+            <th>Телефон</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for powerengineer in powerengineer_list %}
+        <tr>
+            <td> № {{ powerengineer.area.short_name }}  {{ powerengineer.area.name }}</td>
+            <td>{{ powerengineer.verbose_name }}</td>
+            <td>{{ powerengineer.phone_number }}</td>
+        </tr>
+        {% endfor %}
+
+        </tbody>
+    </table>
+    {% else %}
+    <p>Нет объектов</p>
+    {% endif %}
+    {% endif %}
+
+{% endblock content %}

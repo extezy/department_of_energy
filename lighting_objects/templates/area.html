@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% load static %}
+
+<link href="{% static 'css/table.css' %}" rel="stylesheet" type="text/css">
+<link href="{% static 'css/tree-view.css' %}" rel="stylesheet" type="text/css">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.css" rel="stylesheet" type="text/css"/>
+
+    {% if user.is_authenticated %}
+    {% if area_list %}
+    <h3>РУАД->РДО->ОМС</h3>
+
+    <ol class="list-group list-group-numbered tree-nav">
+        {% for area in area_list %}
+        <li class="list-group-item d-flex justify-content-between align-items-start list-group-item-success ">
+            <details class="tree-nav__item is-expandable ms-2 me-auto">
+                <summary class="tree-nav__item-title">{{ area.name }}
+                <span class="badge bg-primary rounded-pill">{{ area.departments.all.count }}</span>
+                </summary>
+                <div class="ms-2 me-auto">
+                    <ol class="list-group list-group-numbered nested">
+                        {% for department in area.departments.all %}
+                        <li class="list-group-item d-flex justify-content-between align-items-start list-group-item-warning">
+                            <details class="tree-nav__item is-expandable ms-2 me-auto">
+                                <summary class="tree-nav__item-title">{{ department.name }}
+                                <span class="badge bg-primary rounded-pill">{{ department.governments.all.count }}</span>
+                                </summary>
+                                <div class="ms-2 me-auto">
+                                    <ol class="list-group list-group-numbered">
+                                        {% for government in department.governments.all %}
+                                        <li class="list-group-item d-flex justify-content-between align-items-start">
+                                            <div class="ms-2 me-auto">
+                                                <div class="fw-bold">{{ government.name }}
+                                                </div>
+                                            </div>
+                                        </li>
+                                        {% endfor %}
+                                    </ol>
+                                </div>
+                            </details>
+                        </li>
+                        {% endfor %}
+                    </ol>
+                </div>
+            </details>
+        </li>
+
+        {% endfor %}
+    </ol>
+    {% else %}
+    <p>Нет данных</p>
+    {% endif %}
+    {% endif %}
+
+{% endblock content %}

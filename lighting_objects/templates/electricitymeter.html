@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+<link href="{% static 'css/cdn/select2.min.css' %}" rel="stylesheet">
+
+    {% if user.is_authenticated %}
+    {% if electricitymeter_list %}
+
+    <h2>Счетчики электроэнергии</h2>
+    <hr>
+    <form method="get">
+
+        <div class="row">
+
+            <div class="col">
+                <label>Статус:</label>
+                <br>
+                {{ filter.form.active }}
+            </div>
+
+            <div class="col">
+                <label>Тип:</label>
+                <br>
+                {{ filter.form.type }}
+            </div>
+
+            <div class="col">
+                <label>Модель:</label>
+                <br>
+                {{ filter.form.model }}
+            </div>
+
+            <div class="col">
+                <label>Номер:</label>
+                <br>
+                {{ filter.form.number }}
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <label>ЛНО:</label>
+                {{ filter.form.lighting_object__contract_info__name }}
+            </div>
+        </div>
+        <br>
+    <button class="btn btn-primary" type="submit" >Отфильтровать</button>
+    </form>
+    <hr>
+    <br>
+    <table id="table_sort" class="table table-striped table-hover table-bordered" cellspacing="0" width="100%">
+        <thead>
+        <tr>
+            <th></th>
+            <th>Номер счётчика</th>
+            <th>Дата поверки</th>
+            <th>Срок эксплуатации</th>
+            <th>Тип</th>
+            <th>Модель</th>
+            <th>Коэффициенты трансформации</th>
+            <th>Координаты</th>
+            <th>Пломбы</th>
+            <th>Место установки</th>
+            <th>Объект освещения</th>
+            <th>Активный</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for electricitymeter in filter.qs %}
+        <tr>
+            <td> {{ forloop.counter }} </td>
+            {% if electricitymeter.number %}
+            <td>{{ electricitymeter.number }}</td>
+            {% else %}
+            <td>Без номера</td>
+            {% endif %}
+            <td>
+                {% if electricitymeter.check_date %}
+                    {{ electricitymeter.check_date }}
+                {% endif %}
+            </td>
+            <td>
+                {% if electricitymeter.get_lifetime %}
+                    {{ electricitymeter.get_lifetime }}
+                {% endif %}
+            </td>
+            <td>
+                {% if electricitymeter.type %}
+                    {{ electricitymeter.type }}
+                {% endif %}
+            </td>
+
+            <td>
+                {% if electricitymeter.model %}
+                    {{ electricitymeter.model }}
+                {% endif %}
+            </td>
+
+            <td>
+                {% if electricitymeter.transformation_ratios %}
+                    {{ electricitymeter.transformation_ratios }}
+                {% endif %}
+            </td>
+            <td>
+                {% if electricitymeter.coordinates %}
+                    <a href="https://yandex.ru/maps/?pt={{electricitymeter.coordinates}}&z=18&l=map" target="_blank">
+                        {{ electricitymeter.coordinates }}
+                    </a>
+                {% endif %}
+            </td>
+            <td>
+                {% if electricitymeter.seals %}
+                    {{ electricitymeter.seals }}
+                {% endif %}
+            </td>
+            <td>
+                {% if electricitymeter.installation_location %}
+                    {{ electricitymeter.installation_location }}
+                {% endif %}
+            </td>
+            <td style="width:30px">
+                {% if electricitymeter.lighting_object %}
+                    <a href="{% url 'object_detail' electricitymeter.lighting_object.id %}" target="_blank">
+                        {{ electricitymeter.lighting_object.contract_info.name }}
+                    </a>
+                {% endif %}
+            </td>
+            <td>{{ electricitymeter.get_active }}</td>
+        </tr>
+        {% endfor %}
+
+        </tbody>
+    </table>
+
+    {% else %}
+    <p>Нет данных</p>
+    {% endif %}
+    {% endif %}
+
+<script src="{% static 'js/cdn/select2.min.js' %}" ></script>
+<script src="{% static 'js/meters-select2.js' %}" ></script>
+
+{% endblock content %}

@@ -1,0 +1,28 @@
+{% extends 'base_detail.html' %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-6">Городской округ:</div>
+        <div class="col-sm-6">{{ localgovernment.name }}</div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-sm-6">РДО:</div>
+        <div class="col-sm-6">{{ localgovernment.department.name }}</div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-sm-6">Главный энергетик:</div>
+        <div class="col-sm-6">{{ localgovernment.department.area.engineers.verbose_name }}</div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-sm-6">Номер телефона:</div>
+        <div class="col-sm-6">{{ localgovernment.department.area.engineers.phone_number }}</div>
+    </div>
+
+</div>
+
+{% endblock content %}

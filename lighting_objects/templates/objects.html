@@ -1,0 +1,247 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+{% if user.is_authenticated %}
+
+{% if lightingobject_list %}
+<div class="container">
+    <h2>Объекты освещения
+        {% if user.is_superuser %}
+        <a href="{% url 'export_data_to_excel' %}" class="btn"><img src="{% static 'img/excel.png' %}" alt="Выгрузить данные"></a>
+        {% endif %}
+    </h2>
+
+    <hr>
+
+    <form method="get">
+
+        <div class="row">
+                <div class="col-sm-3">
+                    <div class="row">
+                        <label>Контракт:</label>
+                        <br>
+                        {{ filter.form.contract_info__number }}
+                    </div>
+
+                    <div class="row">
+                        <label>Абонентский номер:</label>
+                        <br>
+                        {{ filter.form.contract_info__object_number }}
+                    </div>
+
+                </div>
+
+            <div class="col-sm-3">
+                <div class="row">
+                    <label>РУАД:</label>
+                    <br>
+                    {{ filter.form.government__department__area__short_name }}
+                </div>
+
+                <div class="row">
+                    <label>Инвентарный номер:</label>
+                    <br>
+                    {{ filter.form.names__inventory_number }}
+                </div>
+            </div>
+
+            <div class="col-sm-3">
+                <label>РДО:</label>
+                <br>
+                {{ filter.form.government__department__name }}
+            </div>
+
+            <div class="col-sm-3">
+                <label>Городской округ:</label>
+                <br>
+                {{ filter.form.government__name }}
+            </div>
+
+        </div>
+        <br>
+        <div class="row">
+
+            <div class="col-sm-3">
+                <label>Тип объекта:</label>
+                <br>
+                {{ filter.form.types__name }}
+            </div>
+
+            <div class="col-sm-3">
+                <label>Поставщик ЭЭ:</label>
+                <br>
+                {{ filter.form.supplier__id }}
+            </div>
+
+            <div class="col-sm-3">
+                <label>Сетевая организация:</label>
+                <br>
+                {{ filter.form.attachment_points__owner__power_grid_organization__id }}
+            </div>
+
+            <div class="col-sm-3">
+                <label>Владелец точки присоединения:</label>
+                <br>
+                {{ filter.form.attachment_points__owner__name }}
+            </div>
+
+        </div>
+        <br>
+
+        <button class="btn btn-primary" type="submit" >Отфильтровать</button>
+    </form>
+
+    <hr>
+
+    <table id="table_sort" class="table table-striped table-hover table-bordered" cellspacing="0" width="100%">
+        <thead>
+        <tr>
+            <th></th>
+            <th>Тип объекта</th>
+            <th>По контракту</th>
+            <th>На балансе</th>
+            <th>РУАД</th>
+            <th>Поставщик электроэнергии</th>
+            <th>Документы</th>
+            <th>Счетчик электроэнергии</th>
+            <th>Максимальная мощность</th>
+            <th>Точка присоединения</th>
+            <th>ТП</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for lighting in filter.qs %}
+        <tr>
+            <td> {{ forloop.counter }} </td>
+            <td data-sort> <a href="{% url 'object_detail' lighting.id %}" target="_blank">
+                {% for type in lighting.types.all %}
+                    {{ type.name }}
+                {% endfor %}
+            </a> </td>
+            <td>
+                <a href="#" data-bs-toggle="modal" data-bs-target="#details_modal"
+                   data-url="{% url 'contract_info_detail' lighting.get_contract_info %}"
+                >
+                    {{ lighting.contract_info }}
+                </a>
+            </td>
+
+            <td>
+                {% for name in lighting.names.all %}
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#details_modal"
+                       data-url="{% url 'name_detail' name.id %}"
+                    >
+                        {{ name.name }}
+                    </a>
+                {% endfor %}
+            </td>
+
+            <td>
+                {% if lighting.government is not None %}
+                <a href="#" data-bs-toggle="modal" data-bs-target="#details_modal"
+                   data-url="{% url 'government_detail' lighting.get_government %}"
+                > {{ lighting.government.department.area }} </a>
+                {% endif %}
+            </td>
+
+            <td>
+                {% if lighting.supplier is not None %}
+                <a href="#" data-bs-toggle="modal" data-bs-target="#details_modal"
+                   data-url="{% url 'supplier_detail' lighting.get_supplier %}"
+                >
+                    {{ lighting.supplier }}</a>
+
+                {% endif %}
+            </td>
+
+
+            <td>
+                {% if lighting.documents %}
+                {% if lighting.documents.connection_act %}
+                <p><a href="/Files/{{ lighting.documents.connection_act }}" target="_blank">Тех. прис.</a></p>
+                {% endif %}
+                {% if lighting.documents.support_scheme %}
+                <p><a href="/Files/{{ lighting.documents.support_scheme }}" target="_blank">Поопорная схема</a></p>
+                {% endif %}
+                {% if lighting.documents.single_line_scheme %}
+                <p><a href="/Files/{{ lighting.documents.single_line_scheme }}" target="_blank">Однолинейная схема</a></p>
+                {% endif %}
+                {% endif %}
+
+                {% if lighting.names %}
+                    {% for name in lighting.names.all %}
+                        {% if name.inspection_report %}
+                            <p><a href="/Files/{{name.inspection_report}}" target="_blank">Акт осмотра</a></p>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            </td>
+
+            <td>
+
+                {% for meter in lighting.meters.all %}
+                    {% if meter.active %}
+                    <p>
+                        <a href="#" data-bs-toggle="modal" data-bs-target="#details_modal"
+                           data-url="{% url 'electricitymeter_detail' meter.id %} "
+                        >
+                            {{ meter.number }}
+                        </a>
+                        {% if meter.admission_electricity_meter_act %}
+                            - <a href="/Files/{{ meter.admission_electricity_meter_act }}" target="_blank">АДПУ</a>
+                        {% endif %}
+                    </p>
+                    {% endif %}
+                {% endfor %}
+
+            </td>
+
+            <td>
+                {% if lighting.power %}
+                    {{ lighting.power }}
+                {% endif %}
+            </td>
+
+            <td>
+                {% for point in lighting.attachment_points.all %}
+                <p>
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#details_modal"
+                       data-url="{% url 'attachmentpoint_detail' point.id %} "
+                    >
+                        {{ point.name }}
+                    </a>
+                </p>
+                {% endfor %}
+            </td>
+
+            <td>
+                {% for substation in lighting.substations.all %}
+                <p>
+                    {% if substation.coordinates %}
+                        <a href="https://yandex.ru/maps/?pt={{substation.coordinates}}&z=18&l=map" target="_blank">
+                            {{ substation.number }}</a>
+                    {% else %}
+                        {{ substation.number }}
+                    {% endif %}
+                </p>
+                {% endfor %}
+            </td>
+
+        </tr>
+        {% endfor %}
+        </tbody>
+
+    </table>
+</div>
+{% else %}
+    <p>Нет данных</p>
+{% endif %}
+{% endif %}
+
+<script src="{% static 'js/cdn/select2.min.js' %}" ></script>
+<script src="{% static 'js/objects-select2.js' %}" ></script>
+
+{% endblock content %}
